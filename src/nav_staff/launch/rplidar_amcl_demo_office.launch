@@ -1,0 +1,32 @@
+<!--this file is demo for nav with auto obstacle avoidance -->
+<launch>
+ <arg name="custom_param_file" default="$(find nav_staff)/param/dummy.yaml"/>
+
+ <!--sensor-->
+ <include file="$(find nav_staff)/launch/xml/rplidar.launch.xml">
+  <arg name="scan_topic" value="/scan" />
+  <arg name="rplidar_frame" value="/camera_depth_frame" />
+  <arg name="range_min" default="0.15" />
+  <arg name="range_max" default="6.0" />
+ </include>
+
+ <!--map saver-->
+ <arg name="map_file" default="$(find nav_staff)/map/office_map_manual.yaml"/>
+ <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+ <arg name="initial_pose_x" default="0.0"/>
+ <arg name="initial_pose_y" default="0.0"/>
+ <arg name="initial_pose_a" default="0.0"/>
+
+ <!--amcl-->
+ <include file="$(find nav_staff)/launch/xml/amcl_xu.launch.xml">
+  <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+  <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+  <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+ </include>
+
+ <!--move base-->
+ <include file="$(find nav_staff)/launch/xml/move_base_xu.launch.xml">
+  <arg name="custom_param_file" value="$(arg custom_param_file)"/>
+ </include>
+</launch>
+
